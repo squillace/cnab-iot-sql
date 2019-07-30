@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -eo pipefail
+
+action=$CNAB_ACTION
+name=$CNAB_INSTALLATION_NAME
+param=${CNAB_P_HELLO}
+
+echo "$param world"
+case $action in
+    install)
+    echo "Install action"
+    az login --service-principal -u $APP_ID -p ${PASSWORD} --tenant ${TENANT_DNS} 
+    echo "====================== logged into Azure ============================"
+    echo $DEPLOYMENT >> deploy.64
+    base64 -d deploy.64 >> deployment.json
+    set -x
+    az iot edge deployment create --deployment-id sql --hub-name cnab-hub --content deployment.json --target-condition "tags.name = '$CONDITION'"
+    ;;
+    uninstall)
+    echo "uninstall action"
+    ;;
+    upgrade)
+    echo "Upgrade action"
+    ;;
+    downgrade)
+    echo "Downgrade action"
+    ;;
+    status)
+    echo "Status action"
+    ;;
+    *)
+    echo "No action for $action"
+    ;;
+esac
+echo "Action $action complete for $name"
