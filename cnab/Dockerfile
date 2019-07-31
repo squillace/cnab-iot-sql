@@ -17,11 +17,14 @@ RUN az extension add --name azure-cli-iot-ext
 
 # Define environment variable
 
-ENV APP_ID http://demo-cli-login
-ENV PASSWORD e3a5b489-f18b-47a0-a6f5-ea7b8cc5b702
-ENV TENANT_DNS microsoft.onmicrosoft.com
+ENV APP_ID default
+ENV PASSWORD default
+ENV TENANT_DNS default
 ENV CONDITION target
-ENV DEPLOYMENT default
+ENV HUB_NAME default
+ENV DEVICE_ID default
+ENV DEPLOYMENT_ID default
+ENV AZURE_RESOURCE_GROUP default
 
 COPY Dockerfile /cnab/Dockerfile
 COPY app /cnab/app

@@ -6,28 +6,46 @@ action=$CNAB_ACTION
 name=$CNAB_INSTALLATION_NAME
 param=${CNAB_P_HELLO}
 
-echo "$param world"
+az login --service-principal -u $APP_ID -p ${PASSWORD} --tenant ${TENANT_DNS} 
+echo "====================== logged into Azure ============================"
+echo 
+
 case $action in
     install)
-    echo "Install action"
-    az login --service-principal -u $APP_ID -p ${PASSWORD} --tenant ${TENANT_DNS} 
-    echo "====================== logged into Azure ============================"
-    echo $DEPLOYMENT >> deploy.64
-    base64 -d deploy.64 >> deployment.json
+    echo "====================== Installation ============================"
+
+    #echo $DEPLOYMENT >> deploy.64
+    #base64 -d deploy.64 >> deployment.json
     set -x
-    az iot edge deployment create --deployment-id sql --hub-name cnab-hub --content deployment.json --target-condition "tags.name = '$CONDITION'"
+    az iot edge deployment create --deployment-id "$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/sql-deployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
     uninstall)
-    echo "uninstall action"
+    echo "====================== Uninstallation ============================"
+        set -x
+    echo $UNDEPLOYMENT >> deploy.64
+    base64 -d deploy.64 >> undeployment.json
+
+    az iot edge deployment create --deployment-id no-"$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/undeployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
     upgrade)
-    echo "Upgrade action"
+    echo "====================== Uninstallation ============================"
+    set -x
+    #echo $DEPLOYMENT >> deploy.64
+    #base64 -d deploy.64 >> undeployment.json
+
+    az iot edge deployment update --deployment-id "$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/undeployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
     downgrade)
     echo "Downgrade action"
     ;;
     status)
-    echo "Status action"
+    echo "====================== Deployment Status ============================"
+    az iot edge deployment list -g "$AZURE_RESOURCE_GROUP" -n "$HUB_NAME" --query '[].{ID:id,Applied:systemMetrics.results.appliedCount,Targeted:systemMetrics.results.targetedCount,Failed:systemMetrics.results.reportedFailedCount,Succeeded:systemMetrics.results.reportedSuccessfulCount,Target:targetCondition,Created:createdTimeUtc,Updated:lastUpdatedTimeUtc}' -o table
+
+    ;;
+    purge)
+    echo "====================== Purging deployments for target: tags.name == '$CONDITION' ========================="
+    az iot edge deployment list -g "$AZURE_RESOURCE_GROUP" -n "$HUB_NAME" --query '[].id' -o tsv | xargs -I {} az iot edge deployment delete -g "$AZURE_RESOURCE_GROUP" -d {} -n "$HUB_NAME"
     ;;
     *)
     echo "No action for $action"

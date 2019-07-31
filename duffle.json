@@ -1,10 +1,10 @@
 {
-	"description": "A short description of your bundle",
+	"description": "A test bundle to learn out to manage Azure IoT Edge SQL deployments properly using CNAB.",
 	"invocationImages": {
 		"cnab": {
 			"builder": "docker",
 			"configuration": {
-				"registry": "deislabs"
+				"registry": "squillace"
 			},
 			"name": "cnab"
 		}
@@ -16,17 +16,112 @@
 	],
 	"maintainers": [
 		{
-			"email": "john.doe@example.com",
-			"name": "John Doe",
-			"url": "https://example.com"
-		},
-		{
-			"email": "jane.doe@example.com",
-			"name": "Jane Doe",
-			"url": "https://example.com"
+			"email": "ralph.squillace@microsoft.com",
+			"name": "Ralph Squillace",
+			"url": "https://contoso.com"
 		}
 	],
 	"name": "cnab-iot-sql",
 	"schemaVersion": "v1.0.0-WD",
-	"version": "0.1.0"
+	"version": "0.1.0",
+	"definitions": {
+    "CONDITION": 
+    {
+      "default": "info",
+      "type": "string"
+    },
+    "APP_ID": 
+    {
+      "default": "info",
+      "type": "string"
+    },
+    "DEPLOYMENT_ID": 
+    {
+      "default": "info",
+      "type": "string"
+    },
+    "AZURE_RESOURCE_GROUP": 
+    {
+      "default": "info",
+      "type": "string"
+    },
+    "TENANT_DNS": 
+    {
+      "default": "info",
+      "type": "string"
+    },
+    "HUB_NAME": 
+    {
+      "default": "info",
+      "type": "string"
+    }
+  },
+	"parameters":{
+    "fields": {
+      "CONDITION": {
+          "definition": "CONDITION",
+          "applyTo": [
+              "install"
+          ],
+          "description": "one of logrus log level values",
+          "destination": {
+              "env": "CONDITION"
+          }
+      },
+      "APP_ID": {
+        "definition": "APP_ID",
+        "applyTo": [
+            "install"
+        ],
+        "description": "one of logrus log level values",
+        "destination": {
+            "env": "APP_ID"
+        }
+      },
+      "AZURE_RESOURCE_GROUP": {
+        "definition": "AZURE_RESOURCE_GROUP",
+        "applyTo": [
+            "install"
+        ],
+        "description": "one of logrus log level values",
+        "destination": {
+            "env": "AZURE_RESOURCE_GROUP"
+        }
+      },
+      "DEPLOYMENT_ID": {
+        "definition": "DEPLOYMENT_ID",
+        "applyTo": [
+            "install"
+        ],
+        "description": "one of logrus log level values",
+        "destination": {
+            "env": "DEPLOYMENT_ID"
+        }
+      },
+      "TENANT_DNS": {
+        "definition": "TENANT_DNS",
+        "applyTo": [
+            "install"
+        ],
+        "description": "one of logrus log level values",
+        "destination": {
+            "env": "TENANT_DNS"
+        }
+      },
+      "HUB_NAME": {
+        "definition": "HUB_NAME",
+        "applyTo": [
+            "install"
+        ],
+        "description": "one of logrus log level values",
+        "destination": {
+            "env": "HUB_NAME"
+        }
+      }
+    }
+	},
+	"credentials":{
+
+
+	} 
 }

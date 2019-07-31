@@ -1,203 +1,114 @@
 {
-
     "modulesContent": {
-
         "$edgeAgent": {
-
             "properties.desired": {
-
                 "modules": {
-
-                    "AzureSQLDatabaseEdge": {
-
-                        "settings": {
-
-                            "image": "asaedgedockerhubtest/asa-edge-test-module:sql_dacpac16",
-
-                            "createOptions": "{\"HostConfig\":{\"Mounts\":[{\"Target\":\"/var/opt/mssql\",\"Source\":\"sqlVolume\",\"Type\":\"volume\"}],\"PortBindings\":{\"1433/tcp\":[{\"HostPort\":\"1401\"}]}}}"
-
-                        },
-
-                        "type": "docker",
-
-                        "version": "1.0",
-
-                        "env": {
-
-                            "PlanId": {
-
-                                "value": "stream-analytics-on-iot-edge"
-
-                            },
-
-                            "IOTEDGE_HOST": {
-
-                                "value": "http://172.17.0.1:15580"
-
-                            },
-
-                            "ACCEPT_EULA": {
-
-                                "value": "Y"
-
-                            },
-
-                            "SA_PASSWORD": {
-
-                                "value": "!Locks123"
-
-                            },
-
-                            "MSSQL_AGENT_ENABLED": {
-
-                                "value": "true"
-
-                            }
-
-                        },
-
-                        "status": "running",
-
-                        "restartPolicy": "always"
-
-                    },
-
                     "RobotTelemetry": {
-
                         "settings": {
-
                             "image": "sourabhacr.azurecr.io/robottelemetry:30_sec_Anomaly_data",
-
                             "createOptions": ""
-
                         },
-
                         "type": "docker",
-
                         "version": "1.0",
-
                         "status": "running",
-
                         "restartPolicy": "always"
-
-                    }
-
-                },
-
-                "runtime": {
-
-                    "settings": {
-
-                        "minDockerVersion": "v1.25",
-
-                        "registryCredentials": {
-
-                            "sourabhacr": {
-
-                                "address": "sourabhacr.azurecr.io",
-
-                                "password": "/4CBEkUNrsYQNh2BmYDY6ycgqaalfhuP",
-
-                                "username": "sourabhacr"
-
-                            }
-
-                        }
-
                     },
-
-                    "type": "docker"
-
-                },
-
-                "schemaVersion": "1.0",
-
-                "systemModules": {
-
-                    "edgeAgent": {
-
+                    "AzureSQLDatabaseEdge": {
                         "settings": {
-
-                            "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
-
-                            "createOptions": ""
-
+                            "image": "sqldbedge.azurecr.io/azure-sql-database-edge:1.0-preview-amd64 ",
+                            "createOptions": "{\"HostConfig\":{\"Mounts\":[{\"Target\":\"/var/opt/mssql\",\"Source\":\"sqlVolume\",\"Type\":\"volume\"}],\"PortBindings\":{\"1433/tcp\":[{\"HostPort\":\"1401\"}]}}}"
                         },
-
-                        "type": "docker"
-
-                    },
-
-                    "edgeHub": {
-
-                        "settings": {
-
-                            "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
-
-                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
-
-                        },
-
                         "type": "docker",
-
+                        "version": "1.0",
+                        "env": {
+                            "PlanId": {
+                                "value": "stream-analytics-on-iot-edge"
+                            },
+                            "IOTEDGE_HOST": {
+                                "value": "http://172.17.0.1:15580"
+                            },
+                            "ACCEPT_EULA": {
+                                "value": "Y"
+                            },
+                            "SA_PASSWORD": {
+                                "value": "!Locks123"
+                            },
+                            "MSSQL_AGENT_ENABLED": {
+                                "value": "true"
+                            },
+                            "SqlConnectionString": {
+                                "value": "Data Source=tcp:.,1433;Initial Catalog=MeasurementsDB;User Id=SA;Password=!Locks123;Connection Timeout=30"
+                            },
+                            "SqlDacpacFile": {
+                                "value": "MeasurementsDB.dacpac"
+                            }
+                        },
                         "status": "running",
-
                         "restartPolicy": "always"
-
                     }
-
-                }
-
-            }
-
-        },
-
-        "$edgeHub": {
-
-            "properties.desired": {
-
-                "routes": {
-
-                    "RobotTelemetry": "FROM /messages/modules/RobotTelemetry/outputs/RoboticSensors INTO BrokeredEndpoint(\"/modules/AzureSQLDatabaseEdge/inputs/input1\")",
-
-                    "AmbientTelemetry": "FROM /messages/modules/RobotTelemetry/outputs/AmbientSensors INTO BrokeredEndpoint(\"/modules/AzureSQLDatabaseEdge/inputs/input2\")"
-
                 },
-
+                "runtime": {
+                    "settings": {
+                        "minDockerVersion": "v1.25",
+                        "registryCredentials": {
+                            "sourabhacr": {
+                                "address": "sourabhacr.azurecr.io",
+                                "password": "/4CBEkUNrsYQNh2BmYDY6ycgqaalfhuP",
+                                "username": "sourabhacr"
+                            },
+                            "sqldbedge": {
+                                "address": "sqldbedge.azurecr.io",
+                                "password": "=D0FdVVe91vhvzfTtcrE6oCsfricKzEU",
+                                "username": "sqldbedge"
+                            }
+                        }
+                    },
+                    "type": "docker"
+                },
                 "schemaVersion": "1.0",
-
-                "storeAndForwardConfiguration": {
-
-                    "timeToLiveSecs": 7200
-
+                "systemModules": {
+                    "edgeAgent": {
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+                            "createOptions": ""
+                        },
+                        "type": "docker"
+                    },
+                    "edgeHub": {
+                        "settings": {
+                            "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+                            "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+                        },
+                        "type": "docker",
+                        "status": "running",
+                        "restartPolicy": "always"
+                    }
                 }
-
             }
-
         },
-
-        "AzureSQLDatabaseEdge": {
-
+        "$edgeHub": {
             "properties.desired": {
-
-                "ASAJobInfo": "https://asaedgedev.blob.core.windows.net/deve2etest/ASAEdgeJobs/a03fd85d-a2c8-4694-b493-aa38ca7bea45/dbbdca77-d258-46c9-a6fa-509e2b8f8735/ASAEdgeJobDefinition.zip?sv=2018-03-28&sr=b&sig=BaBqAP3BJ3Vcd%2FJiUAvmiN7trB8hSh1842FBBtGEQgU%3D&st=2019-04-25T17%3A43%3A29Z&se=2022-04-25T17%3A53%3A29Z&sp=r",
-
-                "ASAJobResourceId": "/subscriptions/7dfac3c6-1ad0-418e-86e6-6d069ebd4d91/resourceGroups/ASAEdgeDevStorage/providers/Microsoft.StreamAnalytics/streamingjobs/XinEdgeJobTest02",
-
-                "ASAJobEtag": "3ffd7f10-9b5c-4413-8430-ea3640947a09",
-
-                "PublishTimestamp": "3/18/2019 9:09:22 PM"
-
+                "routes": {
+                    "RobotTelemetry": "FROM /messages/modules/RobotTelemetry/outputs/RoboticSensors INTO BrokeredEndpoint(\"/modules/AzureSQLDatabaseEdge/inputs/input1\")",
+                    "AmbientTelemetry": "FROM /messages/modules/RobotTelemetry/outputs/AmbientSensors INTO BrokeredEndpoint(\"/modules/AzureSQLDatabaseEdge/inputs/input2\")"
+                },
+                "schemaVersion": "1.0",
+                "storeAndForwardConfiguration": {
+                    "timeToLiveSecs": 7200
+                }
             }
-
         },
-
         "RobotTelemetry": {
-
             "properties.desired": {}
-
+        },
+        "AzureSQLDatabaseEdge": {
+            "properties.desired": {
+                "SqlPackage": "https://sourabhasdedemofuncapps.blob.core.windows.net/demofiles/MeasurementsDB.zip?sp=rw&st=2019-07-29T21:32:54Z&se=2019-09-01T05:32:54Z&spr=https&sv=2018-03-28&sig=ojKifnkl3f3OV3fTIFwsDk2ElNknDCXl0zFjyBwrbqQ%3D&sr=b",
+                "ASAJobInfo": "https://sourabhasdedemofuncapps.blob.core.windows.net/demofiles/ASAEdgeJobDefinition.zip?sp=rw&st=2019-07-29T21:24:05Z&se=2019-09-01T05:24:05Z&spr=https&sv=2018-03-28&sig=4%2FeWEnpSm6NASujRCRtNzb3D7%2BdLglHIHiQQKZqKfLI%3D&sr=b",
+                "ASAJobResourceId": "/subscriptions/7dfac3c6-1ad0-418e-86e6-6d069ebd4d91/resourceGroups/ASAEdgeDevStorage/providers/Microsoft.StreamAnalytics/streamingjobs/XinEdgeJobTest02",
+                "ASAJobEtag": "3ffd7f10-9b5c-4413-8430-ea3640947a09",
+                "PublishTimestamp": "3/18/2019 9:09:22 PM"
+            }
         }
-
     }
-
 }
