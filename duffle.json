@@ -57,53 +57,51 @@
     }
   },
 	"parameters":{
-    "fields": {
-      "CONDITION": {
-          "definition": "CONDITION",
-          "description": "The tested value of the Device Twin's \"tag.name\" value.",
-          "destination": {
-              "env": "CONDITION"
-          }
-      },
-      "APP_ID": {
-        "definition": "APP_ID",
-        "description": "The Service Principal app name.",
+    "CONDITION": {
+        "definition": "CONDITION",
+        "description": "The tested value of the Device Twin's \"tag.name\" value.",
         "destination": {
-            "env": "APP_ID"
+            "env": "CONDITION"
         }
-      },
-      "AZURE_RESOURCE_GROUP": {
-        "definition": "AZURE_RESOURCE_GROUP",
-        "description": "The Azure Resource Group that is associated with the deployable work.",
-        "destination": {
-            "env": "AZURE_RESOURCE_GROUP"
-        }
-      },
-      "DEPLOYMENT_ID": {
-        "definition": "DEPLOYMENT_ID",
-        "description": "The value of the deployment to create.",
-        "destination": {
-            "env": "DEPLOYMENT_ID"
-        }
-      },
-      "TENANT_DNS": {
-        "definition": "TENANT_DNS",
-        "description": "The Azure Active Directory domain (tenant) in domain form with no protocol scheme.",
-        "destination": {
-            "env": "TENANT_DNS"
-        }
-      },
-      "HUB_NAME": {
-        "definition": "HUB_NAME",
-        "description": "The name of the Azure IoT Hub associated with the IoT devices.",
-        "destination": {
-            "env": "HUB_NAME"
-        }
+    },
+    "APP_ID": {
+      "definition": "APP_ID",
+      "description": "The Service Principal app name.",
+      "destination": {
+          "env": "APP_ID"
+      }
+    },
+    "AZURE_RESOURCE_GROUP": {
+      "definition": "AZURE_RESOURCE_GROUP",
+      "description": "The Azure Resource Group that is associated with the deployable work.",
+      "destination": {
+          "env": "AZURE_RESOURCE_GROUP"
+      }
+    },
+    "DEPLOYMENT_ID": {
+      "definition": "DEPLOYMENT_ID",
+      "description": "The value of the deployment to create.",
+      "destination": {
+          "env": "DEPLOYMENT_ID"
+      }
+    },
+    "TENANT_DNS": {
+      "definition": "TENANT_DNS",
+      "description": "The Azure Active Directory domain (tenant) in domain form with no protocol scheme.",
+      "destination": {
+          "env": "TENANT_DNS"
+      }
+    },
+    "HUB_NAME": {
+      "definition": "HUB_NAME",
+      "description": "The name of the Azure IoT Hub associated with the IoT devices.",
+      "destination": {
+          "env": "HUB_NAME"
       }
     }
 	},
 	"credentials":{
-    "AZURE_SP_PASSWORD": {
+    "PASSWORD": {
       "env": "PASSWORD"
     }
 
