@@ -5,7 +5,8 @@ set -eo pipefail
 action=$CNAB_ACTION
 name=$CNAB_INSTALLATION_NAME
 param=${CNAB_P_HELLO}
-
+env
+set -x
 az login --service-principal -u $APP_ID -p ${PASSWORD} --tenant ${TENANT_DNS} 
 echo "====================== logged into Azure ============================"
 echo 
