@@ -5,6 +5,7 @@ Prerequisites:
 2. An IoT Hub and IoT Device in Azure, in which at a minimum one device twin has tags.name == 'target'
 3. An SP password for an SP that can be used to logon to Azure without 2FA and that has permissions to deploy to Azure IoT hubs. (This demo can be rerun by changing the password for the same SP.)
 4. The SP values of tenant _by the domain name_ -- for example, Microsoft's is `microsoft.onmicrosoft.com` and the application ID.
+5. An OCI runtime, like Docker. If you know how to use the `--driver` option in Duffle, then you might use other types of OCI runtimes like ACI. These are all known to be experimental.
 
 ## Build the bundle
 
@@ -14,10 +15,57 @@ From the root of this repository, type `duffle build .` Duffle will build the bu
 
 ## Create credentials to use the bundle
 
-Assuming you have the service principal password you created to use inside the bundle as a way to log on to Azure, export that to the variable `SP_PASSWORD`. (If you've already run the demo, you can reset the password and reuse the same values by typing 
+### Parameters
+
+There are several parameters that the bundle can take. Look at the `duffle.json` file, which contains the following definitions. Note the defaults will only work on my demo environment:
+    "CONDITION": 
+    {
+      "default": "target",
+      "type": "string"
+    },
+    "APP_ID": 
+    {
+      "default": "http://demo-cli-login",
+      "type": "string"
+    },
+    "DEPLOYMENT_ID": 
+    {
+      "default": "sql",
+      "type": "string"
+    },
+    "AZURE_RESOURCE_GROUP": 
+    {
+      "default": "IoTEdgeResources",
+      "type": "string"
+    },
+    "TENANT_DNS": 
+    {
+      "default": "microsoft.onmicrosoft.com",
+      "type": "string"
+    },
+    "HUB_NAME": 
+    {
+      "default": "cnab-hub",
+      "type": "string"
+    }
+  },
+
+Of these, **`CONDITION`** is the value that the device twin needs to have for the `tags.name` metadata. It defaults to `target`, so you can use this bundle with any query that needs to target devices with `tags.name == "$CONDITION"` if you pass the `--set CONDITION=actual_value` option to duffle.
+
+APP_ID is the automation SP App name: the default is mine, `https://demo-iot-cli`. Passing a new one is mandatory to use this bundle yourself.
+
+DEPLOYMENT_ID is a string that will be the unique deployment name. 
+
+AZURE_RESOURCE_GROUP is the rg that is associated with the Azure resources.
+
+TENANT_DNS is the AAD domain for the SP. For Microsoft corporate accounts, this is `microsoft.onmicrosoft.com`, but can be changed for others to use.
+
+HUB_NAME is the name of the controlling Azure IoT hub that is handling the target devices.
+
+Assuming you have the service principal password you created to use inside the bundle as a way to log on to Azure, export that to the variable `SP_PASSWORD`. If you've already run the demo, you can reset the password and reuse the same values by typing 
 > export SP_PASSWORD=$(az ad sp create-for-rbac --skip-assignment --name <my-iot-demo> --query '[password]' -o tsv)
 
-where you replace `my-iot-demo` with the actual SP name.)
+where you replace `my-iot-demo` with the actual SP name. You will ALSO need the SP app name (not the ID), the tenant domain name for the SP. 
 
 Once exported -- and it must be in POSIX worlds for `duffle` to have access to the environment variable -- type
 > duffle creds generate iot-sql cnab-iot-sql  

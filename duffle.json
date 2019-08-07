@@ -115,7 +115,7 @@
       "stateless": false
     },
     "com.azure.iot.undeploy": {
-      "description": "Removes all deployments, regardless of whether the modules continue to exist. To purge modules, you must com.azure.iot.undeploy.",
+      "description": "Removes all modules, regardless of whether the deployments continue to exist. To purge deployments, you must com.azure.iot.deploy-purge.",
       "modifies": false,
       "stateless": false
     }

@@ -1,8 +1,0 @@
-CNAB_ACTION=purge
-DEPLOYMENT_ID=sql
-DEVICE_ID=cnab-hub
-AZURE_RESOURCE_GROUP=IoTEdgeResources
-TENANT_DNS=microsoft.onmicrosoft.com
-PASSWORD=e3a5b489-f18b-47a0-a6f5-ea7b8cc5b702
-APP_ID=http://demo-cli-login
-HUB_NAME=cnab-hub

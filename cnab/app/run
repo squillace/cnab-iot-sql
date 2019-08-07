@@ -18,8 +18,7 @@ case $action in
     ;;
     com.azure.iot.undeploy)
     echo "====================== Uninstallation ============================"
-    echo $UNDEPLOYMENT >> deploy.64
-    base64 -d deploy.64 >> undeployment.json
+
 
     az iot edge deployment create --deployment-id no-"$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/undeployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
