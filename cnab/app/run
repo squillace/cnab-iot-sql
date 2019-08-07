@@ -5,8 +5,7 @@ set -eo pipefail
 action=$CNAB_ACTION
 name=$CNAB_INSTALLATION_NAME
 param=${CNAB_P_HELLO}
-env
-set -x
+
 az login --service-principal -u $APP_ID -p ${PASSWORD} --tenant ${TENANT_DNS} 
 echo "====================== logged into Azure ============================"
 echo 
@@ -15,14 +14,10 @@ case $action in
     install)
     echo "====================== Installation ============================"
 
-    #echo $DEPLOYMENT >> deploy.64
-    #base64 -d deploy.64 >> deployment.json
-    set -x
     az iot edge deployment create --deployment-id "$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/sql-deployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
-    uninstall)
+    com.azure.iot.undeploy)
     echo "====================== Uninstallation ============================"
-        set -x
     echo $UNDEPLOYMENT >> deploy.64
     base64 -d deploy.64 >> undeployment.json
 
@@ -30,9 +25,6 @@ case $action in
     ;;
     upgrade)
     echo "====================== Uninstallation ============================"
-    set -x
-    #echo $DEPLOYMENT >> deploy.64
-    #base64 -d deploy.64 >> undeployment.json
 
     az iot edge deployment update --deployment-id "$DEPLOYMENT_ID" --hub-name "$HUB_NAME" --content /cnab/app/deploy/undeployment.json --target-condition "tags.name = '$CONDITION'"
     ;;
@@ -44,7 +36,10 @@ case $action in
     az iot edge deployment list -g "$AZURE_RESOURCE_GROUP" -n "$HUB_NAME" --query '[].{ID:id,Applied:systemMetrics.results.appliedCount,Targeted:systemMetrics.results.targetedCount,Failed:systemMetrics.results.reportedFailedCount,Succeeded:systemMetrics.results.reportedSuccessfulCount,Target:targetCondition,Created:createdTimeUtc,Updated:lastUpdatedTimeUtc}' -o table
 
     ;;
-    purge)
+    uninstall)
+    echo "The uninstall command has no effect in Azure IoT scenarios. Consider one of the other commands."
+    ;;
+    com.azure.iot.deploy-purge)
     echo "====================== Purging deployments for target: tags.name == '$CONDITION' ========================="
     az iot edge deployment list -g "$AZURE_RESOURCE_GROUP" -n "$HUB_NAME" --query '[].id' -o tsv | xargs -I {} az iot edge deployment delete -g "$AZURE_RESOURCE_GROUP" -d {} -n "$HUB_NAME"
     ;;
