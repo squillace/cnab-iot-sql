@@ -23,7 +23,7 @@
 	],
 	"name": "cnab-iot-sql",
 	"schemaVersion": "v1.0.0-WD",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"definitions": {
     "CONDITION": 
     {
@@ -57,6 +57,7 @@
     }
   },
 	"parameters":{
+    "fields":{
     "CONDITION": {
         "definition": "CONDITION",
         "description": "The tested value of the Device Twin's \"tag.name\" value.",
@@ -99,6 +100,7 @@
           "env": "HUB_NAME"
       }
     }
+  }
 	},
 	"credentials":{
     "PASSWORD": {
