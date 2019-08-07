@@ -103,7 +103,7 @@
   }
 	},
 	"credentials":{
-    "PASSWORD": {
+    "AZURE_SP_PASSWORD": {
       "env": "PASSWORD"
     }
 
